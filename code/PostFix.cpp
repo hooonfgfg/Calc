@@ -2,53 +2,47 @@
 
 void PostFix::ReturnList(std::string oper)
 {
-	if (postNumberList.empty()) //ºñ¾îÀÖÀ¸¸é Á¾·á
+	if (postNumberList.empty()) //ë¹„ì–´ìˆìœ¼ë©´ ì¢…ë£Œ
 		return;
 	int num2 = *postNumberList.back();
 	postNumberList.pop_back();
 	int num1 = *postNumberList.back();
 	postNumberList.pop_back();
 	int result = Operator(num1, num2, oper);
-	postNumberList.push_back(result); //°è»ê °á°ú ÀúÀå
+	postNumberList.push_back(result); //ê³„ì‚° ê²°ê³¼ ì €ì¥
 
 	post.push_back(*list.back());
-	//std::cout << *list.back() << ' ';
 	list.pop_back();
 }
 
-int PostFix::ReturnValue()
+void PostFix::DigitProcessing(int currentLocation) // 0~9 ì‚¬ì´ì˜ ë¬¸ìì¼ ê²½ìš° ë°˜ë³µëœ ë¬¸ìë¥¼ ì¶”ì¶œ-> ìˆ«ìë¡œ ë³€í™˜í•˜ëŠ” ë©”ì†Œë“œ
 {
-	return *postNumberList.back();
-}
+	ten = 1; //ì´ˆê¸°í™”
+	finalNumber = 0; //ì´ˆê¸°í™”
 
-void PostFix::DigitProcessing(int currentLocation) // 0~9 »çÀÌÀÇ ¹®ÀÚÀÏ °æ¿ì ¹İº¹µÈ ¹®ÀÚ¸¦ ÃßÃâ-> ¼ıÀÚ·Î º¯È¯ÇÏ´Â ¸Ş¼Òµå
-{
-	ten = 1; //ÃÊ±âÈ­
-	finalNumber = 0; //ÃÊ±âÈ­
-
-	for (int j = currentLocation; cy_isdigit(str_arr[j]); j++) //¼ıÀÚ ¾Æ´Ò¶§±îÁö ¹İº¹
+	for (int j = currentLocation; cy_isdigit(str_arr[j]); j++) //ìˆ«ì ì•„ë‹ë•Œê¹Œì§€ ë°˜ë³µ
 		lastLocation = j;
 
 	for (int j = lastLocation; j >= currentLocation; j--)
 	{
-		finalNumber = finalNumber + (ten*(str_arr[j] - 48)); //ÃÖÁ¾ Á¤¼ö°ª ±¸ÇÏ±â
-		ten *= 10; //10´ÜÀ§·Î °öÇÏ±â
+		finalNumber = finalNumber + (ten*(str_arr[j] - 48)); //ìµœì¢… ì •ìˆ˜ê°’ êµ¬í•˜ê¸°
+		ten *= 10; //10ë‹¨ìœ„ë¡œ ê³±í•˜ê¸°
 	}
 
-	currentLocation = lastLocation; //¼ıÀÚ¸¶Áö¸·À§Ä¡ ÀúÀå -> °Ç³Ê¶Ù±â
+	currentLocation = lastLocation; //ìˆ«ìë§ˆì§€ë§‰ìœ„ì¹˜ ì €ì¥ -> ê±´ë„ˆë›°ê¸°
 	std::string getNum = std::to_string(finalNumber);
 	post.push_back(getNum);
-	//std::cout << getNum << ' '; //ÇÇ¿¬»êÀÚ
+	//std::cout << getNum << ' '; //í”¼ì—°ì‚°ì
 	postNumberList.push_back(finalNumber);
 }
 
-void PostFix::OperatorProcessing(int currentLocation) // ¹®
+void PostFix::OperatorProcessing(int currentLocation) // ë¬¸
 {
-	std::string getch(1, str_arr[currentLocation]); //ÇÑ¹®ÀÚ ½ºÆ®¸µÇü
+	std::string getch(1, str_arr[currentLocation]); //í•œë¬¸ì ìŠ¤íŠ¸ë§í˜•
 
-	if (getch == "*" || getch == "/") // * / Àº °¡Àå ¿ì¼±¼øÀ§°¡ ³ôÀ¸¹Ç·Î push
+	if (getch == "*" || getch == "/") // * / ì€ ê°€ì¥ ìš°ì„ ìˆœìœ„ê°€ ë†’ìœ¼ë¯€ë¡œ push
 	{
-		while (!list.empty()) //³ª¸ÓÁö ¸®½ºÆ® Ãâ·Â
+		while (!list.empty()) //ë‚˜ë¨¸ì§€ ë¦¬ìŠ¤íŠ¸ ì¶œë ¥
 		{
 			if (*list.back() == "*" || *list.back() == "/")
 			{
@@ -59,9 +53,9 @@ void PostFix::OperatorProcessing(int currentLocation) // ¹®
 		}
 		list.push_back(getch);
 	}
-	else //+³ª -ÀÏ¶§
+	else //+ë‚˜ -ì¼ë•Œ
 	{
-		while (!list.empty()) //³ª¸ÓÁö ¸®½ºÆ® Ãâ·Â
+		while (!list.empty()) //ë‚˜ë¨¸ì§€ ë¦¬ìŠ¤íŠ¸ ì¶œë ¥
 		{
 			if (*list.back() == "*" || *list.back() == "/")
 			{
@@ -78,15 +72,15 @@ void PostFix::ParenthesisProcessing(int currentLocation)
 {
 	std::string getch(1, str_arr[currentLocation]);
 
-	if (getch == "(") //¿ì¼± PUSH
+	if (getch == "(") //ìš°ì„  PUSH
 		list.push_back(getch);
 
-	else if (getch == ")") // ')' -> '(' ±îÁö POPÈÄ Ãâ·Â(°ıÈ£´Â ¹ö¸²)
+	else if (getch == ")") // ')' -> '(' ê¹Œì§€ POPí›„ ì¶œë ¥(ê´„í˜¸ëŠ” ë²„ë¦¼)
 	{
 		while (*list.back() != "(")
-		{ //¿¬»êÀÚ¹Û¿¡ ¾È³²À½
+		{ //ì—°ì‚°ìë°–ì— ì•ˆë‚¨ìŒ
 			ReturnList(*list.back());
-		}list.pop_back(); //(±îÁö Á¦°Å
+		}list.pop_back(); //(ê¹Œì§€ ì œê±°
 	}
 }
 
@@ -96,23 +90,22 @@ int PostFix::Calculation(std::string str)
 
 	int arr_len = cy_strlenA(str_arr.c_str());
 
-	for (int i = 0; i < arr_len; i++) //¹è¿­ ¼øÈ¸
+	for (int i = 0; i < arr_len; i++) //ë°°ì—´ ìˆœíšŒ
 	{
-		if (cy_isdigit(str_arr[i])) //¼ıÀÚÀÌ¸é
+		if (cy_isdigit(str_arr[i])) //ìˆ«ìì´ë©´
 			DigitProcessing(i);
 
-		else if (cy_isOperator_hjh(str_arr[i])) //¿¬»êÀÚ
+		else if (cy_isOperator_hjh(str_arr[i])) //ì—°ì‚°ì
 			OperatorProcessing(i);
 
-		else if (cy_isParenthesis_hjh(str_arr[i])) //°ıÈ£
+		else if (cy_isParenthesis_hjh(str_arr[i])) //ê´„í˜¸
 			ParenthesisProcessing(i);
 
-		else  continue;	//±× ¹ÛÀÇ ¹®ÀÚµé ¾ËÆÄºªÀÌ³ª Æ¯ÀÌ¼ıÀÚ (PASS)
+		else  continue;	//ê·¸ ë°–ì˜ ë¬¸ìë“¤ ì•ŒíŒŒë²³ì´ë‚˜ íŠ¹ì´ìˆ«ì (PASS)
 	}
 
-	while (!list.empty()) //³ª¸ÓÁö ¸®½ºÆ® ¹İÈ¯
+	while (!list.empty()) //ë‚˜ë¨¸ì§€ ë¦¬ìŠ¤íŠ¸ ë°˜í™˜
 		ReturnList(*list.back());
 
-	//std::cout << ReturnValue() << std::endl;
-	return ReturnValue();
+	return *postNumberList.back();
 }
