@@ -1,25 +1,24 @@
 #pragma once
 #include "BaseCal.h"
 
-// »ç¿ëÀÚ¿¡°Ô Å°º¸µå·Î ÀÔ·Â¹ŞÀº °ªÀ» ±âÁØÀ¸·Î °è»ê±â ±â´ÉÀ» ÈÄÀ§¿¬»ê¹æ½ÄÀ¸·Î Ã³¸®ÇÏ¿© ÄÜ¼Ö·Î Ãâ·ÂÇÏ´Â Å¬·¡½º
+// ì‚¬ìš©ìì—ê²Œ í‚¤ë³´ë“œë¡œ ì…ë ¥ë°›ì€ ê°’ì„ ê¸°ì¤€ìœ¼ë¡œ ê³„ì‚°ê¸° ê¸°ëŠ¥ì„ í›„ìœ„ì—°ì‚°ë°©ì‹ìœ¼ë¡œ ì²˜ë¦¬í•˜ì—¬ ì½˜ì†”ë¡œ ì¶œë ¥í•˜ëŠ” í´ë˜ìŠ¤
 class PostFix : public BaseCal
 {
 private:
-	int finalNumber = 0; //¼ıÀÚ ÃÖÁ¾ÃßÃâ°ª
-	int lastLocation; //¸¶Áö¸· À§Ä¡
-	int ten; //ÀÚ¸´¼ö °è»ê º¯¼ö(10´ÜÀ§)
+	int finalNumber = 0; //ìˆ«ì ìµœì¢…ì¶”ì¶œê°’
+	int lastLocation; //ë§ˆì§€ë§‰ ìœ„ì¹˜
+	int ten; //ìë¦¿ìˆ˜ ê³„ì‚° ë³€ìˆ˜(10ë‹¨ìœ„)
 
-	Cy_ListT <std::string> post; //ÈÄÀ§ ½ºÅÃ
-	Cy_ListT <INT32> postNumberList; //¼ıÀÚ ÀúÀå-> ÃÖÁ¾°á°ú¸¸ ³²´Â ¸®½ºÆ®
+	Cy_ListT <std::string> post; //í›„ìœ„ ìŠ¤íƒ
+	Cy_ListT <INT32> postNumberList; //ìˆ«ì ì €ì¥-> ìµœì¢…ê²°ê³¼ë§Œ ë‚¨ëŠ” ë¦¬ìŠ¤íŠ¸
 	
 protected:
 
-	void DigitProcessing(int currentLocation); // ¼ıÀÚ Ã³¸® ¸Ş¼Òµå
-	void OperatorProcessing(int currentLocation); // ¿¬»êÀÚ Ã³¸® ¸Ş¼Òµå
-	void ParenthesisProcessing(int currentLocation); //°ıÈ£ Ã³¸® ¸Ş¼Òµå
+	void DigitProcessing(int currentLocation); // ìˆ«ì ì²˜ë¦¬ ë©”ì†Œë“œ
+	void OperatorProcessing(int currentLocation); // ì—°ì‚°ì ì²˜ë¦¬ ë©”ì†Œë“œ
+	void ParenthesisProcessing(int currentLocation); //ê´„í˜¸ ì²˜ë¦¬ ë©”ì†Œë“œ
 
-	void ReturnList(std::string oper); //ÈÄÀ§½ºÅÃ ¾Ë°í¸®Áò (Á¤´ä Æ÷ÇÔ)
+	void ReturnList(std::string oper); //í›„ìœ„ìŠ¤íƒ ì•Œê³ ë¦¬ì¦˜ (ì •ë‹µ í¬í•¨)
 	
-	int ReturnValue(); //°ª ¸®ÅÏ
 	int Calculation(std::string str);
 };
